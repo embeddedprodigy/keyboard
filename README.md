@@ -79,14 +79,7 @@ If your Mod-Tap dual-function keys (like Shift or GUI keys on hold) are triggeri
 
 To verify your QMK target compilation environment or manage alternative layouts on your machine, you can run diagnostic tracking queries directly from your terminal.
 
-### 1. Listing Available Keymaps
-To see a full list of all custom and stock keymaps configured for the ErgoDash Rev1 hardware inside your repository setup, execute this path query:
-```bash
-qmk list-keymaps -kb omkbd/ergodash/rev1
-```
-*(Your custom `myergodash` directory profile should appear cleanly inside this printed list output).*
-
-### 2. Auditing Supported Keyboards List
+### 1. Listing Available Keyboards
 If you are switching hardware types or working across different layout architectures, you can verify all available keyboard profiles compiled within your local system registry metadata:
 ```bash
 qmk list-keyboards
@@ -94,6 +87,44 @@ qmk list-keyboards
 To quickly isolate and find your specific configurations from the full index, filter the query using a grep pipeline:
 ```bash
 qmk list-keyboards | grep ergodash
+```
+
+### 2. Listing Available Keymaps
+To see a full list of all custom and stock keymaps configured for the ErgoDash Rev1 hardware inside your repository setup, execute this path query:
+```bash
+qmk list-keymaps -kb omkbd/ergodash/rev1
+```
+*(Your custom `myergodash` directory profile should appear cleanly inside this printed list output).*
+
+### 3. Creating a New Keymap
+To scaffold a fresh keymap folder with template source files (see Step 3 above), run:
+```bash
+qmk new-keymap -kb omkbd/ergodash/rev1 -km <keymap-name>
+```
+For example:
+```bash
+qmk new-keymap -kb omkbd/ergodash/rev1 -km myergodash
+```
+This creates a new directory at `keyboards/omkbd/ergodash/rev1/keymaps/<keymap-name>/` populated with a template you can then overwrite via `qmk json2c`.
+
+### 4. Querying the Default Keyboard & Keymap
+QMK remembers your most recently used target as a saved default, letting you omit the `-kb` / `-km` flags on later commands. To check what is currently stored:
+```bash
+qmk config                      # shows ALL saved QMK settings in one view
+qmk config user.keyboard        # shows the current default keyboard
+qmk config user.keymap          # shows the current default keymap
+```
+If no default has been set yet, the output will be empty.
+
+### 5. Setting the Default Keyboard & Keymap
+Persist your target so `qmk compile` / `qmk flash` run without needing explicit flags:
+```bash
+qmk config user.keyboard=omkbd/ergodash/rev1
+qmk config user.keymap=myergodash
+```
+After running these, the following works with no `-kb` / `-km` arguments:
+```bash
+qmk flash -km myergodash        # or simply: qmk flash
 ```
 
 ---
