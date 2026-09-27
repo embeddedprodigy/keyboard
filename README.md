@@ -8,6 +8,27 @@ This repository contains the custom `myergodash` split mechanical keyboard profi
 
 Follow this explicit sequence whenever you want to update or re-flash the layout configuration keys on your ErgoDash hardware.
 
+### 🧰 Step 0: Install the QMK CLI & Run One-Time Environment Setup
+This only has to be done **once** per machine (skip to Step 1 if `qmk` is already installed). Install the QMK CLI, then let it clone `qmk_firmware` and pull down the build dependencies:
+
+```bash
+curl -fsSL https://install.qmk.fm | sh   # installs the QMK CLI (Linux / macOS / WSL / QMK MSYS)
+qmk setup                                # clones qmk_firmware + installs build dependencies
+```
+
+* **Prompts:** answer `y` to all of the prompts when `qmk setup` asks.
+* **Custom home folder:** run `qmk setup -H <path>`, or change it later with `qmk config user.qmk_home=<path>` (the default is `~/qmk_firmware`).
+* **Verify the install** before moving on:
+  ```bash
+  qmk --version            # e.g. 1.2.0
+  qmk config user.qmk_home # should print your qmk_firmware checkout path
+  ```
+* **Platform notes:** on Windows the CLI ships inside the **QMK MSYS** bundle, so the installer line above is only needed if you are reinstalling/updating it — run it from the MSYS or MinGW 64-bit terminal. On Linux/macOS/WSL, use your normal terminal and make sure the AVR/ARM toolchain is present (`qmk setup` will print the exact `pacman -S` / `apt install` line for anything missing — on this ErgoDash/Pro Micro target you need at least `avr-gcc` and `avrdude`).
+* **Test the toolchain** once the setup finishes:
+  ```bash
+  qmk compile -kb omkbd/ergodash/rev1 -km default
+  ```
+
 ### 🌐 Step 1: Design Layout in QMK Configurator
 1. Open your web browser and navigate to the official **[QMK Configurator Website](https://qmk.fm)**.
 2. Select the correct keyboard target hardware profile configuration template from the primary dropdown input field: **`omkbd/ergodash/rev1`**.
@@ -19,7 +40,7 @@ Follow this explicit sequence whenever you want to update or re-flash the layout
 3. This saves a file named **`ergodash.json`** directly into your computer's local Windows `Downloads` folder.
 
 ### 💻 Step 3: Initialize Environment inside QMK MSYS
-1. Fire up your local **QMK MSYS terminal tool application**.
+1. Fire up your local **QMK MSYS terminal tool application** (see **Step 0** if the `qmk` CLI is not installed yet — on Linux/macOS/WSL any normal terminal works).
 2. Ensure you are sitting in your core firmware root workspace directory:
    ```bash
    cd qmk_firmware/
